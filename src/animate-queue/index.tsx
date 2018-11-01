@@ -9,25 +9,63 @@ import React from 'react'
  *  hidden Condition: showHeight  默认值是当
  */
 interface Props {
-  interval?: number
+  interval?: number,
+  animate?: boolean
 }
 
-export default class AnimateQueue extends React.Component<Props> {
+export class AnimateQueue extends React.Component<Props> {
   interval = this.props.interval || 250
-  state = {
-    aniamte: false
+  
+  state: any = {
+    aniamte: false,
+    current: 0
   }
-  componentDidMount() {
 
+  componentDidMount() {
+    const { animate } = this.props
+    this.setState({ animate })
   }
 
   render() {
     const { children } = this.props
+    const { animate } = this.state
+
+    const style = {
+      transform: `translateX(0px) translateY(${animate ? 0 : 40}px)`,
+      transition: 'all ease 0.3s',
+      opacity: animate ? 1 : 0
+    }
 
     return React.Children.map(children, (item: any) => {
-      React.cloneElement(item, {
-        style: {}
-      })
+      return React.cloneElement(item, { style })
+    })
+  }
+}
+
+export class Animate extends React.Component<Props> {
+  interval = this.props.interval || 250
+  state: any = {
+    aniamte: false
+  }
+  componentDidMount() {
+    const { animate } = this.props
+    this.setState({ animate })
+  }
+
+  render() {
+    const { children } = this.props
+    const { animate } = this.state
+
+    const style = {
+      transform: `translateX(0px) translateY(${animate ? 0 : 40}px)`,
+      transition: 'all ease 0.3s',
+      opacity: animate ? 1 : 0
+    }
+
+    if(!children) return null
+
+    return React.Children.map(children, (item: any) => {
+      return React.cloneElement(item, { style })
     })
   }
 }

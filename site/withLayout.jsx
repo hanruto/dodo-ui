@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { withRouter } from 'next/router'
 import './style.scss'
+import '../styles/index.scss'
 import classnames from 'classnames'
 
 
