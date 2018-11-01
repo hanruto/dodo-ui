@@ -14,16 +14,20 @@ interface Props {
 
 export default class AnimateQueue extends React.Component<Props> {
   interval = this.props.interval || 250
-
+  state = {
+    aniamte: false
+  }
   componentDidMount() {
-    React.Children.map(this.props.children, item => {
-      console.log(item)
-    })
+
   }
 
   render() {
     const { children } = this.props
 
-    return children || null
+    return React.Children.map(children, (item: any) => {
+      React.cloneElement(item, {
+        style: {}
+      })
+    })
   }
 }
