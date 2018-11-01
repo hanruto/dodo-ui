@@ -1,0 +1,30 @@
+@mixin pull-right {
+    float: right;
+}
+
+@mixin clearfix {
+    &:before {
+        display: table;
+        content: '';
+    }
+    &:after {
+        display: table;
+        content: ''
+    }
+}
+
+@mixin abs-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.flex-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ze-pull-right{
+    float: right;
+}

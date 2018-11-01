@@ -1,0 +1,17 @@
+.ze-collapse{
+    @include clearfix;
+    &-head{
+        cursor: pointer;
+        position: relative;
+    }
+    &-body{
+        &.collapsed{
+            border-top: none;
+        }
+        overflow: hidden;
+        transition: all ease 0.3s;
+        &-content{
+           overflow: hidden;
+        }
+    }
+}
