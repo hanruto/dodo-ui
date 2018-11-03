@@ -1,3 +1,9 @@
+@mixin clearfix {
+  &:before, &:after {
+    display: table;
+    content: '';
+  }
+}
 body,html,#__next {
   height: 100%;
 }
@@ -9,6 +15,9 @@ body,html,#__next {
     width: 300px;
     height: 100%;
     border-right: 1px solid #ddd;
+    overflow-y: auto;
+    
+    @include clearfix;
     &-item {
       a {
         color: #666;
@@ -58,12 +67,21 @@ body,html,#__next {
     height: 100%;
     box-sizing: border-box;
     overflow-y: auto;
+    @include clearfix;
 
     h2 {
       font-size: 30px;
       font-weight: 300;
       margin-top: 30px;
       margin-bottom: 20px;
+    }
+
+    pre {
+      line-height: 40px;
+      padding-left: 20px;
+      border-left: 4px solid #39f;
+      background-color: #e4f0f7;
+      color: #777;
     }
   }
 }

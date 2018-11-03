@@ -16,7 +16,8 @@ const componentMenus = [
   { name: 'Dialog', href: '/components/dialog' },
   { name: 'Table', href: '/components/table' },
   { name: 'Tabs', href: '/components/tabs' },
-  { name: 'AnimateQueue', href: '/components/aniamte-queue' }
+  { name: 'AnimateQueue', href: '/components/aniamte-queue' },
+  { name: 'ScrollDetect', href: '/components/scroll-detect' }
 ]
 
 export default function (Component) {
