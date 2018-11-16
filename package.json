@@ -7,7 +7,7 @@
     "dev": "nodemon server --watch ./server/**/*",
     "build": "next build",
     "start": "next start",
-    "watch-tsc": "tsc -w ./src/**/* --config ./tsconfig.json",
+    "watch-tsc": "tsc -w ./src/**/*",
     "sass": "sass ./styles/index.scss ./lib/dodo.css"
   },
   "dependencies": {
