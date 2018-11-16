@@ -31,11 +31,8 @@ export default class Page extends React.Component {
         <Button style={{ marginTop: 20 }} onClick={() => this.handleToggle(1)}>切换动画</Button>
 
         <h2>动画队列</h2>
-        <AnimateQueue animate={animate2}>
-          <p>我是一段会动的文字</p>
-          <p>我是一段会动的文字</p>
-          <p>我是一段会动的文字</p>
-          <p>我是一段会动的文字</p>
+        <AnimateQueue animate={true}>
+          {[1,2,3,4,5,6,7,8].map(index => <p key={index}>我是一段会动的文字</p>)}
         </AnimateQueue>
 
         <h2>动画队列的间隔和速度</h2>

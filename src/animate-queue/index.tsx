@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 
 /**
@@ -51,14 +51,18 @@ export class AnimateQueue extends React.Component<Props & QueueProps> {
   }
 
   componentDidMount() {
-    this.handleAnimate(this.props.animate)
+    setTimeout(() => this.handleAnimate(this.props.animate))
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.animate !== this.props.animate) {
-      this.handleAnimate(nextProps.animate)
+  componentDidUpdate(prevProps) {
+    if (prevProps.animate !== this.props.animate) {
+      this.handleAnimate(this.props.animate)
+    }
+    if (prevProps.children.length !== this.props.children.length) {
+      this.handleAnimate(this.props.animate)
     }
   }
+
 
   handleAnimate = (animate: boolean) => {
     const { interval = defaultInterval, children, speed = defaultSpeed } = this.props

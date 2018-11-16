@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 /**
  * props
  *  autodetect 自动检测，根据滚动位置判断
@@ -31,7 +31,7 @@ export declare class AnimateQueue extends React.Component<Props & QueueProps> {
     timer: any;
     state: any;
     componentDidMount(): void;
-    componentWillReceiveProps(nextProps: any): void;
+    componentDidUpdate(prevProps: any): void;
     handleAnimate: (animate: boolean) => void;
     render(): JSX.Element[];
 }
