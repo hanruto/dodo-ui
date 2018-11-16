@@ -62,7 +62,7 @@ export class Tabs extends Component<TabsProps> {
     this.handleChangeBar()
   }
 
-  handleClickTab = (e, value, index) => {
+  handleClickTab = (_, value, index) => {
     if (this.props.onChange) {
       this.props.onChange(value, index)
     }
