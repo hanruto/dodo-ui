@@ -16,6 +16,7 @@ const componentMenus = [
   { name: 'Dialog', href: '/components/dialog' },
   { name: 'Table', href: '/components/table' },
   { name: 'Tabs', href: '/components/tabs' },
+  { name: 'Icon', href: '/components/icon' },
   { name: 'AnimateQueue', href: '/components/aniamte-queue' },
   { name: 'ScrollDetect', href: '/components/scroll-detect' }
 ]
