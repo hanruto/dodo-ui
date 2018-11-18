@@ -14,6 +14,7 @@ body,html,#__next {
   .main-nav {
     width: 300px;
     height: 100%;
+    padding-top: 20px;
     border-right: 1px solid #ddd;
     overflow-y: auto;
     
@@ -62,12 +63,16 @@ body,html,#__next {
     }
   }
   .main-content {
-    width: calc(100% - 30px);
     padding: 0 40px 100px;
     height: 100%;
     box-sizing: border-box;
+    width: 100%;
     overflow-y: auto;
     @include clearfix;
+    &-container {
+      width: 720px;
+      margin: 0 auto;
+    }
 
     h2 {
       font-size: 30px;
@@ -77,11 +82,16 @@ body,html,#__next {
     }
 
     pre {
-      line-height: 40px;
-      padding-left: 20px;
+      line-height: 30px;
+      padding-left: 10px;
       border-left: 4px solid #39f;
       background-color: #e4f0f7;
       color: #777;
+      
+      .hljs {
+        background-color: #e4f0f7;
+        // font-family: Arial, Helvetica, sans-serif;
+      }
     }
   }
 }

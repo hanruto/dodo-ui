@@ -7,8 +7,8 @@ import classnames from 'classnames'
 
 
 const menus = [
-  { name: '试用', href: '/use' },
-  { name: '设计', href: '/design' }
+  { name: '介绍', href: '/use' },
+  // { name: '设计', href: '/design' }
 ]
 const componentMenus = [
   { name: 'Button', href: '/components/button' },
@@ -16,9 +16,11 @@ const componentMenus = [
   { name: 'Dialog', href: '/components/dialog' },
   { name: 'Table', href: '/components/table' },
   { name: 'Tabs', href: '/components/tabs' },
-  { name: 'Icon', href: '/components/icon' },
+  // { name: 'Icon', href: '/components/icon' },
   { name: 'AnimateQueue', href: '/components/aniamte-queue' },
-  { name: 'ScrollDetect', href: '/components/scroll-detect' }
+  { name: 'ScrollDetect', href: '/components/scroll-detect' },
+  { name: 'MusicPlayer', href: '/components/music-player' },
+  { name: 'Drawer', href: '/components/drawer' },
 ]
 
 export default function (Component) {
@@ -39,7 +41,7 @@ export default function (Component) {
               ))
             }
             <div className="main-nav-item">
-              <div className="main-nav-toggle">组件展示</div>
+              <div className="main-nav-toggle">组件</div>
               <ul>
                 {
                   componentMenus.map((item, index) => (
@@ -52,7 +54,9 @@ export default function (Component) {
             </div>
           </div>
           <div className="main-content">
-            <Component />
+            <div className="main-content-container">
+              <Component />
+            </div>
           </div>
         </div>
       )
