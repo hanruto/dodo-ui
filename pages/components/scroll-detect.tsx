@@ -1,7 +1,6 @@
 import React from 'react'
 import ScrollDetect from '../../src/scroll-detect'
 import { AnimateQueue } from '../../src/animate-queue'
-import withLayout from '../../site/withLayout'
 
 
 class AutoAnimate extends React.Component {
@@ -37,7 +36,6 @@ class AutoAnimate extends React.Component {
     )
   }
 }
-@withLayout
 export default class Page extends React.Component {
   render() {
     return (

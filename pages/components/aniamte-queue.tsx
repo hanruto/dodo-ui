@@ -1,9 +1,7 @@
 import React from 'react'
 import { Animate, AnimateQueue, AnimateQueueGroup } from '../../src/animate-queue'
 import Button from '../../src/button'
-import withLayout from '../../site/withLayout'
 
-@withLayout
 export default class Page extends React.Component {
   state = {
     animate1: true,

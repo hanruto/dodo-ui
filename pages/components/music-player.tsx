@@ -1,6 +1,5 @@
 import React from 'react'
 import { MusicPlayer } from '../../src'
-import withLayout from '../../site/withLayout'
 
 const musics = [
   {
@@ -29,7 +28,6 @@ const musics = [
   }
 ]
 
-@withLayout
 export default class Page extends React.Component {
   render() {
     return (

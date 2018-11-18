@@ -1,9 +1,7 @@
 import React from 'react'
-import withLayout from '../../site/withLayout'
 import { Button } from '../../src'
 
 
-@withLayout
 export default class Demo extends React.Component {
   render() {
     return (

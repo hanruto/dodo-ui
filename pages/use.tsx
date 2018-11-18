@@ -1,5 +1,4 @@
 import React from 'react'
-import withLayout from '../site/withLayout'
 import Highlight from 'react-highlight'
 
 const code = `import React from 'react'
@@ -9,7 +8,6 @@ const DoDoButton = () => {
   return <Button>DEFAULT</Button>
 }`
 
-@withLayout
 export default class Page extends React.Component {
   render() {
     return (

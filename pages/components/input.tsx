@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import Input from '../../src/input'
 import InputArea from '../../src/input/input-area'
-import withLayout from '../../site/withLayout'
 
 
-@withLayout
 export default class componentName extends Component {
   render() {
     return (

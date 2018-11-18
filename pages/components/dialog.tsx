@@ -1,9 +1,7 @@
 import React from 'react'
-import withLayout from '../../site/withLayout'
 import Dialog from '../../src/dialog'
 import Button from '../../src/button'
 
-@withLayout
 export default class Page extends React.Component {
   state = {
     open: false

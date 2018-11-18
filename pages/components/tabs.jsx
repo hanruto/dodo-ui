@@ -1,8 +1,6 @@
 import React from 'react'
 import { Tabs, Tab } from '../../src/tabs'
-import withLayout from '../../site/withLayout'
 
-@withLayout
 export default class Page extends React.Component {
   state = {
     value: 0

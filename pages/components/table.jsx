@@ -1,6 +1,5 @@
 import React from 'react'
 import Table from '../../src/table'
-import withLayout from '../../site/withLayout'
 
 const columns = [
   { label: '姓名', key: 'name' },
@@ -14,7 +13,6 @@ const data = [
   { name: '小王', age: '15', job: '没有', key: 3 },
 ]
 
-@withLayout
 export default class Page extends React.Component {
   render() {
     return (
