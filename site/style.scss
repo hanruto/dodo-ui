@@ -7,11 +7,16 @@
 body,html,#__next {
   height: 100%;
 }
+
+a {
+  color: #39f;
+}
 .main-layout {
   display: flex;
   height: 100%;
   position: relative;
   .main-nav {
+    box-sizing: border-box;
     width: 300px;
     height: 100%;
     padding-top: 20px;
@@ -82,7 +87,7 @@ body,html,#__next {
     }
 
     pre {
-      line-height: 30px;
+      line-height: 1.8em;
       padding-left: 10px;
       border-left: 4px solid #39f;
       background-color: #e4f0f7;
