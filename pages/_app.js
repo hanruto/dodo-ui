@@ -8,6 +8,7 @@ import classnames from 'classnames'
 const baseViewURL = 'https://github.com/soWhiteSoColl/dodoui/blob/master/pages'
 const menus = [
   { name: '介绍', href: '/use' },
+  { name: '博客', href: 'https://www.dodoblog.cn', target: '_blank' },
   // { name: '设计', href: '/design' }
 ]
 const componentMenus = [
@@ -34,7 +35,7 @@ class Nav extends React.Component {
           menus.map((item, index) => (
             <div className="main-nav-item" key={index}>
               <div className="main-nav-toggle">
-                <Link href={item.href}><a className={classnames(route === item.href && 'active')}>{item.name}</a></Link>
+                <Link href={item.href}><a className={classnames(route === item.href && 'active')} target={item.target}>{item.name}</a></Link>
               </div>
             </div>
           ))
