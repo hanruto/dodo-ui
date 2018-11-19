@@ -8,7 +8,7 @@ import classnames from 'classnames'
 const baseViewURL = 'https://github.com/soWhiteSoColl/dodoui/blob/master/pages'
 const menus = [
   { name: '介绍', href: '/use' },
-  { name: '博客', href: 'https://www.dodoblog.cn', target: '_blank' },
+  { name: '博客', href: 'https://www.dodoblog.cn' },
   // { name: '设计', href: '/design' }
 ]
 const componentMenus = [
