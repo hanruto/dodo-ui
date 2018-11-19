@@ -5,6 +5,7 @@ import '../site/style.scss'
 import '../styles/index.scss'
 import classnames from 'classnames'
 
+const baseViewURL = 'https://github.com/soWhiteSoColl/dodoui/blob/master/pages'
 const menus = [
   { name: '介绍', href: '/use' },
   // { name: '设计', href: '/design' }
@@ -74,6 +75,9 @@ export default class Layout extends React.Component {
         <div className="main-content">
           <div className="main-content-container">
             <Component />
+            <a className="main-content-code-view" target="_blank" href={`${baseViewURL}${router.route}.tsx`}>
+              view code
+            </a>
           </div>
         </div>
       </div>
