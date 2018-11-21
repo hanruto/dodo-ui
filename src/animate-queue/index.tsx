@@ -6,7 +6,7 @@ import * as React from 'react'
  *  autodetect 自动检测，根据滚动位置判断
  *  interval 动画队列间隔时间
  *  animate  不开启自动检测的时候，可以通过animate手动控制动画
- *  hidden Condition: showHeight  默认值是当
+ *  speed 动画的速度
  */
 interface Props {
   speed?: number,
@@ -43,10 +43,11 @@ interface QueueProps {
   onAnimateEnd?: Function
   beforeAnimate?: Function
 }
-export class AnimateQueue extends React.Component<Props & QueueProps> {
+
+export class AnimateQueue extends React.Component<QueueProps & Props> {
   timer = null
 
-  state: any = {
+  state = {
     current: 0
   }
 
@@ -63,13 +64,14 @@ export class AnimateQueue extends React.Component<Props & QueueProps> {
     }
   }
 
-
-  handleAnimate = (animate: boolean) => {
-    const { interval = defaultInterval, children, speed = defaultSpeed } = this.props
+  handleAnimate = (animate) => {
+    const { interval = defaultInterval, children } = this.props
     const max = children ? children.length : 0
     clearTimeout(this.timer)
+
     const loop = () => {
       let current = this.state.current
+
       if (!animate && current <= 0) {
         this.setState({ current: 0 })
         this.props.onAnimateEnd && this.props.onAnimateEnd()
@@ -83,23 +85,25 @@ export class AnimateQueue extends React.Component<Props & QueueProps> {
       }
 
       this.setState({ current })
-      this.timer = setTimeout(() => {
-        loop()
-      }, interval)
+      this.timer = setTimeout(loop, interval)
     }
 
     loop()
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timer)
+  }
+
   render() {
     const { children, speed = 400, animate, ...rest } = this.props
     const { current } = this.state
-
-    return React.Children.map(children, (item: any, index: number) => {
+    return React.Children.map(children, (item, index) => {
       return <Animate animate={index < current} speed={speed} {...rest}>{item}</Animate>
     })
   }
 }
+
 
 export class AnimateQueueGroup extends React.Component<Props & QueueProps> {
   state = {

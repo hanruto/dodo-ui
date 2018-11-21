@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import classnames from 'classnames'
 
 function formatTimeNumber(number) {
@@ -129,7 +129,7 @@ export default class MusicPlayer extends React.Component<Props> {
 
   handlePlayFrom = e => {
     const audio = this.$audio.current
-    const { left, width } = e.target.getBoundingClientRect()
+    const { left, width } = e.currentTarget.getBoundingClientRect()
     const clickPos = (e.clientX - left) / width
     const time = audio.duration * clickPos
     if (!time) return false

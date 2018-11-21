@@ -1,6 +1,6 @@
-import React from 'react'
+import * as React from 'react'
 import classnames from 'classnames'
-import ReactDOM from 'react-dom'
+import * as ReactDOM from 'react-dom'
 
 class DrawerInner extends React.Component {
   state = {

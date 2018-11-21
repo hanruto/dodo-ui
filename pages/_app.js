@@ -21,6 +21,7 @@ const componentMenus = [
   { name: 'AnimateQueue', href: '/components/aniamte-queue' },
   { name: 'ScrollDetect', href: '/components/scroll-detect' },
   { name: 'MusicPlayer', href: '/components/music-player' },
+  { name: 'MusicMetronome', href: '/components/music-metronome' },
   { name: 'Drawer', href: '/components/drawer' },
 ]
 
