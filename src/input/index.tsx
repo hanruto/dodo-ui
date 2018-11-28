@@ -10,7 +10,7 @@ function checkIsValid(value) {
     if (value === undefined) return false
 }
 
-interface Porps {
+interface Porps extends React.InputHTMLAttributes<HTMLInputElement>{
     error?: boolean
     label?: any
     message?: string
@@ -19,7 +19,7 @@ interface Porps {
     classname?: string
 }
 
-export default class Input extends React.Component<Porps & React.InputHTMLAttributes<HTMLInputElement>> {
+export default class Input extends React.Component<Porps> {
     state = {
         focus: false,
         dirty: false,

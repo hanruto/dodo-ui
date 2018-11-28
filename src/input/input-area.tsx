@@ -3,7 +3,7 @@
 import * as React from 'react'
 import classnames from 'classnames'
 
-interface Porps {
+interface Porps extends React.TextareaHTMLAttributes<HTMLInputElement> {
   error?: boolean
   label?: any
   message?: string
@@ -12,7 +12,7 @@ interface Porps {
   classname?: string
 }
 
-export default class InputArea extends React.Component<Porps & React.TextareaHTMLAttributes<HTMLInputElement>> {
+export default class InputArea extends React.Component<any> {
   state = {
     focus: false,
     dirty: false,
@@ -27,7 +27,7 @@ export default class InputArea extends React.Component<Porps & React.TextareaHTM
 
   handleBlur = e => {
     this.setState({ focus: false, dirty: true })
-    this.props.onFocus && this.props.onFocus(e)
+    this.props.onBlur && this.props.onBlur(e)
   }
 
   handleChange = e => {
@@ -39,7 +39,7 @@ export default class InputArea extends React.Component<Porps & React.TextareaHTM
   }
 
   render() {
-    const { label, rows, fullWidth, width, placeholder } = this.props
+    const { label, rows, fullWidth, width, placeholder, ...rest } = this.props
     const { focus } = this.state
     return (
       <div
@@ -55,12 +55,12 @@ export default class InputArea extends React.Component<Porps & React.TextareaHTM
           {label && <label className="ze-input-label">{label}</label>}
           <textarea
             placeholder={placeholder}
-            rows={rows}
             ref={this.$input}
             className="ze-input"
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
             onChange={this.handleChange}
+            {...rest}
           />
         </div>
       </div>

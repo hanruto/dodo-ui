@@ -4,7 +4,7 @@ import * as React from 'react';
  *  autodetect 自动检测，根据滚动位置判断
  *  interval 动画队列间隔时间
  *  animate  不开启自动检测的时候，可以通过animate手动控制动画
- *  hidden Condition: showHeight  默认值是当
+ *  speed 动画的速度
  */
 interface Props {
     speed?: number;
@@ -27,12 +27,15 @@ interface QueueProps {
     onAnimateEnd?: Function;
     beforeAnimate?: Function;
 }
-export declare class AnimateQueue extends React.Component<Props & QueueProps> {
+export declare class AnimateQueue extends React.Component<QueueProps & Props> {
     timer: any;
-    state: any;
+    state: {
+        current: number;
+    };
     componentDidMount(): void;
     componentDidUpdate(prevProps: any): void;
-    handleAnimate: (animate: boolean) => void;
+    handleAnimate: (animate: any) => void;
+    componentWillUnmount(): void;
     render(): JSX.Element[];
 }
 export declare class AnimateQueueGroup extends React.Component<Props & QueueProps> {

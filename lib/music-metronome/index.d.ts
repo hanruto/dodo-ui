@@ -6,6 +6,7 @@ interface Props {
 export default class MusicCanvas extends React.Component<Props> {
     state: {
         loading: boolean;
+        paused: boolean;
     };
     $canvas: any;
     hash: number;
@@ -18,6 +19,8 @@ export default class MusicCanvas extends React.Component<Props> {
     handleInit: () => Promise<boolean>;
     handleStart: () => void;
     handlePause: () => void;
+    handleResume: () => void;
+    handleSuspend: () => void;
     handleDecode: (bufferArray: any, hash: any) => false | Promise<{}>;
     handleDraw: (analyser: any) => void;
     componentWillUnmount(): void;

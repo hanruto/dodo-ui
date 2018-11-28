@@ -1,5 +1,5 @@
 import * as React from 'react';
-interface Porps {
+interface Porps extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: boolean;
     label?: any;
     message?: string;
@@ -7,7 +7,7 @@ interface Porps {
     fullWidth?: boolean;
     classname?: string;
 }
-export default class Input extends React.Component<Porps & React.InputHTMLAttributes<HTMLInputElement>> {
+export default class Input extends React.Component<Porps> {
     state: {
         focus: boolean;
         dirty: boolean;

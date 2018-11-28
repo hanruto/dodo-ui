@@ -1,13 +1,5 @@
 import * as React from 'react';
-interface Porps {
-    error?: boolean;
-    label?: any;
-    message?: string;
-    width?: number;
-    fullWidth?: boolean;
-    classname?: string;
-}
-export default class InputArea extends React.Component<Porps & React.TextareaHTMLAttributes<HTMLInputElement>> {
+export default class InputArea extends React.Component<any> {
     state: {
         focus: boolean;
         dirty: boolean;
@@ -19,4 +11,3 @@ export default class InputArea extends React.Component<Porps & React.TextareaHTM
     setFocus: () => void;
     render(): JSX.Element;
 }
-export {};
