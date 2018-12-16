@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import Ripple from '../ripple'
 import classnames from 'classnames'
@@ -14,7 +14,7 @@ interface TabProps {
   changeBarToTab?: Function
 }
 
-export class Tab extends Component<TabProps> {
+export class Tab extends React.Component<TabProps> {
   tab: any = React.createRef()
 
   ripple: any = React.createRef()
@@ -54,7 +54,7 @@ interface TabsProps {
   style?: any
   type?: string
 }
-export class Tabs extends Component<TabsProps> {
+export class Tabs extends React.Component<TabsProps> {
   activeBar: any = React.createRef()
   activeTab: any = React.createRef()
 

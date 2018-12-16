@@ -1,5 +1,6 @@
 import * as React from 'react';
 interface Props {
+    paused?: boolean;
     getAudio?: Function;
     musics?: {
         pic: string;
@@ -9,42 +10,47 @@ interface Props {
         id: string;
         lrc: string;
     }[];
-    onPlay?: Function;
     audioConfig?: {
         position: string;
-        size: string;
     };
+    listId?: string;
+    musicId?: string;
+    onChange?: Function;
+    onPlay?: Function;
+    onPause?: Function;
 }
 export default class MusicPlayer extends React.Component<Props> {
     $audio: any;
-    $list: any;
-    $listInner: any;
     currentIndex: number;
-    lyricStr: string;
-    timer: any;
+    readonly randomList: any;
     state: {
         currentIndex: number;
-        paused: boolean;
+        loop: boolean;
         currentTime: any;
         duration: any;
+        random: boolean;
         open: boolean;
         showList: boolean;
-        hiddenInBottom: boolean;
     };
+    timer: any;
+    playTimer: any;
+    playPromise: any;
+    historyRoute: string;
     componentDidMount(): void;
-    componentDidUpdate(nextProps: any): void;
+    componentDidUpdate(prevProps: any): void;
     componentWillUnmount(): void;
-    handleLoadLrc: () => void;
-    handlePlay: () => void;
+    handlePlay: () => Promise<void>;
     handlePause: () => void;
-    handlePlayFrom: (e: any) => boolean;
+    handleClear: () => void;
+    handlePlayFrom: (e: any) => void;
     handleNext: () => void;
     handlePrev: () => void;
     handleToggle: (currentIndex: any) => void;
+    handleChangeIndex: (nextIndex: any) => void;
     handleToggleOpen: () => void;
     handleToggleList: () => void;
-    handleTogglePanel: () => void;
-    readonly lyric: string | false;
-    render(): false | JSX.Element;
+    handleToggleLoop: () => void;
+    handleRandom: () => void;
+    render(): JSX.Element;
 }
 export {};

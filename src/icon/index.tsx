@@ -1,7 +1,15 @@
-import React from 'react'
+import * as React from 'react'
 import classnames from 'classnames'
 
-export default class SvgIcon extends React.Component {
+
+interface Props {
+  type: string,
+  antd?: boolean
+  className?: string
+  active?: boolean
+  onClick?: React.MouseEventHandler
+}
+export default class SvgIcon extends React.Component<Props> {
   render() {
     const { type, antd, className, active, ...rest } = this.props
 

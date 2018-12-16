@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "watch-tsc": "tsc -w ./src/**/*",
-    "sass": "sass ./styles/index.scss ./lib/dodo.css"
+    "sass": "sass ./styles/index.scss ./lib/dodo.css",
+    "compile": "sass ./styles/index.scss ./lib/dodo.css & tsc"
   },
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.1.2",

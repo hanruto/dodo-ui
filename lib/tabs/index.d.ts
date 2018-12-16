@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import * as React from 'react';
 interface TabProps {
     value?: string | number;
     active?: boolean;
@@ -8,7 +8,7 @@ interface TabProps {
     style?: any;
     changeBarToTab?: Function;
 }
-export declare class Tab extends Component<TabProps> {
+export declare class Tab extends React.Component<TabProps> {
     tab: any;
     ripple: any;
     createRipple: (e: any) => void;
@@ -26,7 +26,7 @@ interface TabsProps {
     style?: any;
     type?: string;
 }
-export declare class Tabs extends Component<TabsProps> {
+export declare class Tabs extends React.Component<TabsProps> {
     activeBar: any;
     activeTab: any;
     componentDidUpdate(): void;
