@@ -15,11 +15,31 @@ export default class Page extends React.Component {
       })
   }
 
+  handleContinuouslyOpen = () => {
+    const dialog1 = Dialog.create({
+      title: '对话框一号',
+      content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos voluptate fugiat culpa nesciunt, quam commodi voluptatem accusantium hic? Explicabo consectetur nulla ullam aliquam. Numquam cumque voluptates ipsa reprehenderit, recusandae officiis.'
+    })
+
+    const dialog2 = Dialog.create({
+      title: '对话框二号',
+      content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos voluptate fugiat culpa nesciunt, quam commodi voluptatem accusantium hic? Explicabo consectetur nulla ullam aliquam. Numquam cumque voluptates ipsa reprehenderit, recusandae officiis.'
+    })
+
+    dialog1.show()
+      .then(() => dialog1.close({ notCloseMask: true }))
+      .then(() => dialog2.show())
+      .then(() => dialog2.close())
+  }
+
   render() {
     return (
       <>
         <h2>对话框</h2>
         <Button onClick={this.handleOpen} type="primary">打开对话框</Button>
+
+        <h2>连续打开对话框</h2>
+        <Button onClick={this.handleContinuouslyOpen} type="primary">连续对话框</Button>
       </>
     )
   }

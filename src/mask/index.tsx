@@ -18,21 +18,24 @@ class Mask extends React.Component<Props>{
   }
 }
 
+let closeTimer = null
+
 const show = () => {
   ReactDOM.render(<Mask show={true} />, getDOMById(maskId))
+  clearTimeout(closeTimer)
 }
 
 const hidden = () => {
   ReactDOM.render(<Mask show={false} />, getDOMById(maskId))
   
-  setTimeout(
+  closeTimer = setTimeout(
     () => ReactDOM.unmountComponentAtNode(getDOMById(maskId)),
     transitionDuration + 50
   )
 }
 
 const maskManager = {
-  show, hidden
+  show, hidden,
 }
 
 export default maskManager

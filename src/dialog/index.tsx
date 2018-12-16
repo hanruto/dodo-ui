@@ -53,12 +53,15 @@ const create = option => {
   const props = { ...option }
   props.children = option.content
 
-  const close = () => {
-    ReactDOM.render(<Dialog {...props} visible={false} onCancel={close} />, getDOMById(dialogRootId))
-    Mask.hidden()
-    setTimeout(() => {
-      ReactDOM.unmountComponentAtNode(getDOMById(dialogRootId))
-    }, defaulAnimationDuration + 50)
+  const close = (option: any = {}) => {
+    return new Promise((resolve) => {
+      ReactDOM.render(<Dialog {...props} visible={false} onCancel={close} />, getDOMById(dialogRootId))
+      !option.notCloseMask && Mask.hidden()
+      setTimeout(() => {
+        ReactDOM.unmountComponentAtNode(getDOMById(dialogRootId))
+        resolve()
+      }, defaulAnimationDuration + 50)
+    })
   }
 
   const show = () => {
@@ -78,8 +81,6 @@ const create = option => {
 
   return { show, close }
 }
-
-
 
 export default {
   create: create
