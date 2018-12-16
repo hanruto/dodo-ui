@@ -29,11 +29,29 @@ const musics = [
 ]
 
 export default class Page extends React.Component {
+  state = {
+    paused: true
+  }
+
+  handlePlay = () => {
+    this.setState({ paused: false })
+  }
+
+  handlePause = () => {
+    this.setState({ paused: true })
+  }
+
   render() {
+    const { paused } = this.state
+
     return (
-      <>
-        <MusicPlayer musics={musics}/>
-      </>
+      <MusicPlayer
+        audioConfig={{ position: 'bottom' }}
+        musics={musics}
+        paused={paused}
+        onPlay={this.handlePlay}
+        onPause={this.handlePause}
+      />
     )
   }
 }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Input from '../../src/input'
-import InputArea from '../../src/input/input-area'
 
 
 export default class componentName extends Component {
@@ -24,9 +23,6 @@ export default class componentName extends Component {
 
         <h2>禁用</h2>
         <Input label="Disabled" disabled />
-
-        <h2>多行文本</h2>
-        <InputArea label="Teatarea" rows={5} />
       </>
     )
   }

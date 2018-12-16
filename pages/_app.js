@@ -1,8 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { withRouter } from 'next/router'
-import '../site/style.scss'
 import '../styles/index.scss'
+import './index.scss'
 import classnames from 'classnames'
 
 const baseViewURL = 'https://github.com/soWhiteSoColl/dodoui/blob/master/pages'
@@ -15,7 +15,6 @@ const componentMenus = [
   { name: 'Button', href: '/components/button' },
   { name: 'Input', href: '/components/input' },
   { name: 'Dialog', href: '/components/dialog' },
-  { name: 'Table', href: '/components/table' },
   { name: 'Tabs', href: '/components/tabs' },
   // { name: 'Icon', href: '/components/icon' },
   { name: 'AnimateQueue', href: '/components/aniamte-queue' },

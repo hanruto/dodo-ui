@@ -1,7 +1,7 @@
 import * as React from 'react'
-import classnames from 'classnames'
 import * as ReactDOM from 'react-dom'
-
+import classnames from 'classnames'
+import { getDOMById } from '../utils/tool'
 class DrawerInner extends React.Component {
   state = {
     open: false
@@ -11,16 +11,16 @@ class DrawerInner extends React.Component {
     const open = !this.state.open
     this.setState({ open })
 
-    // const app = document.getElementById('__next')
-
-    // if (window.innerWidth > 720) {
-    //   app.style.width = open ? 'calc(100% - 340px)' : '100%'
-    // }
+    const app = document.getElementById('__next')
+    app.style.transition = 'all ease .6s'
+    if (window.innerWidth > 720) {
+      app.style.width = open ? 'calc(100% - 340px)' : '100%'
+    }
   }
 
   componentWillUnmount() {
-    // const app = document.getElementById('__next')
-    // app.style.width = '100%'
+    const app = document.getElementById('__next')
+    app.style.width = '100%'
   }
 
   render() {
@@ -54,37 +54,20 @@ class DrawerInner extends React.Component {
   }
 }
 
-const createDOM = () => {
-  let el = document.getElementById('drawer-root')
-
-  if (!el) {
-    el = document.createElement('div')
-    el.id = 'drawer-root'
-    const container = document.createElement('div')
-    container.id = 'drawer-container'
-
-    el.appendChild(container)
-    document.body.appendChild(el)
-  }
-
-  return el
-}
 export default class Drawer extends React.Component {
-  $drawer = null
-
   componentDidMount() {
-    createDOM()
-    this.$drawer = document.querySelector('#drawer-container')
-    ReactDOM.render(<DrawerInner {...this.props} />, this.$drawer)
+    ReactDOM.render(<DrawerInner {...this.props} />, getDOMById('drawer-root'))
   }
 
   componentDidUpdate() {
-    ReactDOM.render(<DrawerInner {...this.props} />, this.$drawer)
+    ReactDOM.render(<DrawerInner {...this.props} />, getDOMById('drawer-root'))
   }
 
   componentWillUnmount() {
-    ReactDOM.unmountComponentAtNode(this.$drawer)
+    ReactDOM.unmountComponentAtNode(getDOMById('drawer-root'))
+    document.body.removeChild(getDOMById('drawer-root'))
   }
+
   render() {
     return null
   }

@@ -1,37 +1,38 @@
-import * as React from 'react'
+import React from 'react'
 import classnames from 'classnames'
+import { secondToMunite } from '../utils/tool'
+import Icon from '../icon'
+import _ from 'lodash'
 
-function formatTimeNumber(number) {
-  return (number + 100).toString().substr(1, 2)
+
+const noop = () => { }
+
+const MusicList = props => {
+  const { musics, onToggle, current } = props
+  return (
+    <div className="main-music-player-list">
+      <h3>播放列表 <span className="sub">共{musics.length}首</span></h3>
+      <div className="main-music-player-list-wrapper">
+        {
+          musics.map((music, index) => (
+            <div
+              key={music.id}
+              className={classnames("main-music-player-list-item", current === index && 'active')}
+              onClick={() => onToggle(index)}
+            >
+              <span className="main-music-player-list-item-name">{music.name}</span>
+              <span className="main-music-player-list-item-singer">{music.singer}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  )
 }
 
-function formatLyric(lyric) {
-  const lyricRows = lyric.split('\n')
-  const lyrics = []
-  lyricRows.forEach(row => {
-    const matched = row.match(/\[(.*)\](.*)/) || {}
-    let time = matched[1]
-    const lyric = matched[2]
-    if (time && !lyric) {
-      lyrics.push({ time: 0, lyric: time })
-    }
-    if (time && lyric) {
-      const [m, s] = time.split(':')
-      time = Number(m) * 60 + Number(s)
-      lyrics.push({ time, lyric })
-    }
-  })
-
-  return lyrics
-}
-
-function secondToMunite(time) {
-  if (!time) return '--:--'
-  const seconds = parseInt(time)
-  return formatTimeNumber(parseInt((seconds / 60).toString())) + ':' + formatTimeNumber(seconds % 60)
-}
 
 interface Props {
+  paused?: boolean
   getAudio?: Function
   musics?: {
     pic: string,
@@ -41,124 +42,163 @@ interface Props {
     id: string,
     lrc: string
   }[]
-  onPlay?: Function
   audioConfig?: {
     position: string
-    size: string
   }
+  listId?: string
+  musicId?: string
+  onChange?: Function
+  onPlay?: Function
+  onPause?: Function
 }
+
 export default class MusicPlayer extends React.Component<Props> {
   $audio: any = React.createRef()
-  $list: any = React.createRef()
-  $listInner: any = React.createRef()
-
   currentIndex = 0
-  lyricStr = ''
-  timer = null
+
+  get randomList() {
+    return _.shuffle(this.props.musics)
+  }
 
   state = {
     currentIndex: 0,
-    paused: true,
+    loop: false,
     currentTime: null,
     duration: null,
-
+    random: false,
     open: false,
     showList: false,
-    hiddenInBottom: false,
   }
+
+  timer = null
+  playTimer = null
+  playPromise = null
+  historyRoute = '/music/list'
 
   componentDidMount() {
-    const musics = this.props.musics
-    const audio = this.$audio.current
+    const audio: any = this.$audio.current
 
-    const currentIndex = musics && musics.findIndex(item => item.id === window.localStorage.getItem('current-music-id'))
-    this.setState({
-      open: window.localStorage.getItem('open-music-player') === '1',
-      currentIndex: currentIndex !== -1 ? currentIndex : 0,
+    this.setState({ open: window.localStorage.getItem('open-music-player') === '1' })
+
+    audio.addEventListener('ended', this.handleNext)
+    audio.addEventListener('play', this.handlePlay)
+    audio.addEventListener('pause', this.handlePause)
+    audio.addEventListener('canplay', () => {
+      const { currentTime, duration } = audio
+      this.setState({ currentTime, duration })
     })
-    if (audio) {
-      audio.addEventListener('play', this.handlePlay)
-      audio.addEventListener('pause', this.handlePause)
-      this.props.getAudio && this.props.getAudio(audio)
-    }
+
+    audio.addEventListener('error', () => setTimeout(this.handleNext, 500))
+
+    this.props.getAudio && this.props.getAudio(audio)
   }
 
-  componentDidUpdate(nextProps) {
-    // 切换歌单
-    if (nextProps.musics !== this.props.musics) {
-      this.setState({ currentIndex: 0 }, this.handlePlay)
+  componentDidUpdate(prevProps) {
+    if (prevProps.paused !== this.props.paused) {
+      const { paused } = this.props
+      paused ? this.handlePause() : this.handlePlay()
+    }
+
+    if (prevProps.listId !== this.props.listId) {
+      this.setState({ currentIndex: 0 })
+      !this.props.paused && this.handleToggle(0)
+    }
+
+    if (prevProps.musicId !== this.props.musicId) {
+      const musics = this.props.musics
+      const currentIndex = musics.findIndex(item => item.id === this.props.musicId)
+      if (currentIndex !== -1) {
+        this.setState({ currentIndex })
+        !this.props.paused && this.handleToggle(currentIndex)
+      }
     }
   }
 
   componentWillUnmount() {
-    this.timer && clearInterval(this.timer)
+    this.handleClear()
   }
 
-  handleLoadLrc = () => {
-    const request = new XMLHttpRequest();
-    const url = this.props.musics[this.state.currentIndex].lrc
-    request.open('GET', url, true);
-    request.onload = () => {
-      this.lyricStr = request.response
-    }
-    request.send();
-  }
-
-  handlePlay = () => {
-    const music = this.props.musics[this.state.currentIndex]
+  handlePlay = async () => {
     const audio = this.$audio.current
-
-    this.handleLoadLrc()
-    this.props.onPlay && this.props.onPlay(music)
-    this.setState({ paused: false })
-
-    window.localStorage.setItem('current-music-id', music.id)
-    audio.play(audio.currentTime)
-
-    this.timer = setInterval(() => {
-      const { currentTime, duration } = audio
-      this.setState({ currentTime, duration })
-    }, 100)
+    if (this.playPromise) await this.playPromise
+    this.playPromise = await audio.play(audio.currentTime)
+      .catch(err => {
+        console.log(err)
+        clearTimeout(this.playTimer)
+        this.playTimer = setTimeout(() => this.handlePlay(), 1000)
+      })
+      .then(() => {
+        clearInterval(this.timer)
+        this.timer = setInterval(() => {
+          const { currentTime, duration } = audio
+          this.setState({ currentTime, duration })
+        }, 200)
+      })
   }
 
   handlePause = () => {
-    this.setState({ paused: true })
     this.$audio.current && this.$audio.current.pause()
+    this.handleClear()
+  }
+
+  handleClear = () => {
     this.timer && clearInterval(this.timer)
+    this.playTimer && clearTimeout(this.playTimer)
   }
 
   handlePlayFrom = e => {
     const audio = this.$audio.current
     const { left, width } = e.currentTarget.getBoundingClientRect()
     const clickPos = (e.clientX - left) / width
-    const time = audio.duration * clickPos
-    if (!time) return false
-    audio.currentTime = time
+    const currentTime = audio.duration * clickPos
+    audio.currentTime = currentTime
+    this.setState({ currentTime })
   }
 
   handleNext = () => {
-    let currentIndex = this.state.currentIndex + 1
-    if (currentIndex >= this.props.musics.length) {
-      currentIndex = 0
+    const { random, currentIndex } = this.state
+    const { musics } = this.props
+    let nextIndex = 0
+    if (random) {
+      const currentId = musics[currentIndex].id
+      const randomIndex = this.randomList.findIndex(item => item.id === currentId)
+      const nextId = this.randomList[randomIndex + 1 > this.randomList.length ? 0 : randomIndex + 1].id
+      nextIndex = musics.findIndex(item => item.id === nextId)
+    } else {
+      nextIndex = this.state.currentIndex + 1
+      if (nextIndex >= musics.length) nextIndex = 0
     }
 
-    this.setState({ currentIndex }, this.handlePlay)
+    this.setState({ currentIndex: nextIndex }, () => this.handleChangeIndex(nextIndex))
   }
 
   handlePrev = () => {
-    let currentIndex = this.state.currentIndex - 1
-    if (currentIndex < 0) {
-      currentIndex = this.props.musics.length - 1
+    const { random, currentIndex } = this.state
+    const { musics } = this.props
+    let nextIndex = currentIndex
+    if (random) {
+      const currentId = musics[currentIndex].id
+      const randomIndex = this.randomList.findIndex(item => item.id === currentId)
+      const nextId = this.randomList[randomIndex - 1 < 0 ? this.randomList.length - 1 : randomIndex - 1].id
+      nextIndex = musics.findIndex(item => item.id === nextId)
+    } else {
+      nextIndex = currentIndex - 1
+      if (nextIndex < 0) nextIndex = musics.length - 1
     }
 
-    this.setState({ currentIndex }, this.handlePlay)
+    this.setState({ currentIndex: nextIndex }, () => this.handleChangeIndex(nextIndex))
   }
 
   handleToggle = currentIndex => {
-    this.setState({ currentIndex }, this.handlePlay)
+    this.setState({ currentIndex }, () => this.handleChangeIndex(currentIndex))
   }
 
-  // ui 样式功能， 开关列表和播放器 open hiddenInBottom showList
+  handleChangeIndex = nextIndex => {
+    const { paused, musics } = this.props
+    if (!paused) this.handlePlay()
+    this.props.onChange && this.props.onChange(musics[nextIndex], nextIndex)
+  }
+
   handleToggleOpen = () => {
     const open = !this.state.open
     this.setState({ open })
@@ -166,144 +206,79 @@ export default class MusicPlayer extends React.Component<Props> {
   }
 
   handleToggleList = () => {
-    const showList = !this.state.showList
-
-    const list = this.$list.current
-    const listInnerWrapper = this.$listInner.current
-    list.style.height = showList ? listInnerWrapper.offsetHeight + 'px' : 0 + 'px'
-    this.setState({ showList })
+    this.setState({ showList: !this.state.showList })
   }
 
-  handleTogglePanel = () => {
-    const hiddenInBottom = !this.state.hiddenInBottom
-    this.setState({ hiddenInBottom })
+  handleToggleLoop = () => {
+    const loop = !this.state.loop
+    const audio = this.$audio.current
+    loop ? audio.removeEventListener('ended', this.handleNext) : audio.addEventListener('ended', this.handleNext)
+    this.setState({ loop })
   }
 
-  get lyric() {
-    if (!this.lyricStr) return false
-
-    const lyricsInfo = formatLyric(this.lyricStr)
-    const audio = this.$audio.current || {}
-    let currentLyric = ''
-
-    lyricsInfo && lyricsInfo.forEach((item, index) => {
-      const isLast = lyricsInfo.length === index + 1
-      const musicTime = audio.currentTime
-
-      if (isLast && musicTime > item.time - 0.02) {
-        currentLyric = item.lyric
-      } else {
-        if (musicTime > item.time - 0.02 && musicTime < lyricsInfo[index + 1].time - 0.02) {
-          currentLyric = item.lyric
-        }
-      }
-    })
-
-    return currentLyric
+  handleRandom = () => {
+    this.setState({ random: !this.state.random })
   }
 
   render() {
-    const { open, duration, currentTime, hiddenInBottom, showList, paused, currentIndex } = this.state
-    const { audioConfig = { position: 'bottom', size: 'large' }, musics } = this.props
-
-    if (!musics || !musics.length) return false
-
+    const { open, duration, currentTime, loop, showList, currentIndex, random } = this.state
+    const {
+      audioConfig = { position: 'bottom' },
+      musics = [],
+      paused,
+      onPlay = noop,
+      onPause = noop
+    } = this.props
     const { pic, name, singer, url } = musics[currentIndex]
-    const audio = this.$audio.current || {}
 
     return (
       <div className={classnames(
         "main-music-player",
         open ? 'open' : 'close',
-        hiddenInBottom ? 'hidden' : 'show',
         showList && 'main-music-player-show-list',
-        audioConfig.position === 'bottom' && 'main-music-player-in-bottom',
-        audioConfig.size === 'large' && 'main-music-player-large',
-        paused ? 'pause' : 'play'
+        audioConfig.position === 'bottom' ? 'main-music-player-in-bottom' : 'main-music-player-small',
+        paused ? 'pause' : 'play',
       )}>
-        <audio src={url} ref={this.$audio} onEnded={this.handleNext} />
+        <audio src={url} ref={this.$audio} loop={loop} />
         <div className="main-music-player-wrapper">
-          <div className="main-music-player-pic" onClick={paused ? this.handlePlay : this.handlePause}>
-            <img src={pic} />
-            <div className={classnames("music-player-play-btn", paused ? 'pause' : 'play')}>
-              <svg width={30} height={30}>
-                <path className="svg-play-btn" stroke="#fff" strokeWidth={3} strokeLinecap="butt" fill="none"></path>
-              </svg>
+          <div
+            className="main-music-player-pic"
+            onClick={paused ? () => onPlay() : () => onPause()}
+          >
+            <img src={pic} alt={name} />
+            <div className={classnames("music-player-play-btn")}>
+              <Icon type={paused ? 'pause' : 'play'} />
             </div>
           </div>
-
           <div className="main-music-player-info">
-            <div style={{ width: '100%' }}>
-              <div className="main-music-player-name text-overflow-ellipsis" style={{ width: 'calc(100% - 80px)' }}>{name}</div>
+            <div className="main-music-player-progress-bar" onClick={this.handlePlayFrom}>
+              <div
+                className="main-music-player-progress-bar-inner"
+                style={{ width: `${currentTime / duration * 100}%` }}
+              ></div>
+              <span className="main-music-player-progress-bar-timer">
+                {duration ? `${secondToMunite(currentTime)} / ${secondToMunite(duration)}` : '加载中...'}
+              </span>
+            </div>
+            <div className="main-music-player-desc">
+              <div className="main-music-player-name text-overflow-ellipsis">{name}</div>
               <div className="main-music-player-author">{singer}</div>
             </div>
-            <div className="main-music-player-control">
-              <svg width={25} height={30} onClick={this.handlePrev}>
-                <path className="svg-play-btn"
-                  stroke="#999"
-                  strokeWidth={3}
-                  strokeLinecap="round"
-                  fill="none"
-                  d="M18 3 5 15 18 27"
-                ></path>
-              </svg>
 
-              <svg width={25} height={30} onClick={this.handleNext}>
-                <path className="svg-paly-btn"
-                  stroke="#999"
-                  strokeWidth={3}
-                  strokeLinecap="round"
-                  fill="none"
-                  d="M3 3 18 15 3 27"
-                ></path>
-              </svg>
+            <div className="main-music-player-control">
+              <Icon type={'random'} antd={true} active={random} onClick={this.handleRandom} />
+              <Icon type={'loop'} antd={true} active={loop} onClick={this.handleToggleLoop} />
+              <Icon type={'menu'} active={showList} onClick={this.handleToggleList} />
+              <Icon type={'left-arrow'} onClick={this.handlePrev} />
+              <Icon type={'right-arrow'} onClick={this.handleNext} />
             </div>
-            {
-              currentTime
-                ? <div className="main-music-player-progress-bar" onClick={this.handlePlayFrom}>
-                  <div
-                    className="main-music-player-progress-bar-inner"
-                    style={{ width: `${currentTime / duration * 100}%` }}
-                  ></div>
-                  <span className="main-music-player-progress-bar-timer">{secondToMunite(audio.currentTime)} / {secondToMunite(audio.duration)}</span>
-                  {
-                    this.lyric
-                      ? <span
-                        className="main-music-player-progress-bar-lyric text-overflow-ellipsis"
-                        style={{ width: 'calc(100% - 80px)' }}
-                      >{this.lyric}</span>
-                      : null
-                  }
-                </div>
-                : null
-            }
           </div>
 
           <div className={classnames("main-music-player-toggle", open ? 'open' : 'close')} onClick={this.handleToggleOpen}>
-            <svg width={10} height={30}>
-              <path className="svg-btn" stroke="#fff" strokeWidth={2} strokeLinecap="butt" fill="none"></path>
-            </svg>
+            <Icon type={open ? 'left-arrow' : 'right-arrow'} />
           </div>
         </div>
-        <div className="main-music-player-sider">
-          <div className="main-music-player-sider-ball" onClick={this.handleToggleList}>列表</div>
-          <div className="main-music-player-sider-ball" onClick={this.handleTogglePanel}>收起</div>
-        </div>
-        <div className="main-music-player-list" ref={this.$list}>
-          <div className="main-music-player-list-inner" ref={this.$listInner}>
-            <h3>播放列表 <span className="sub">共{musics.length}首</span></h3>
-            <div className="main-music-player-list-wrapper">
-              {
-                musics.map((music, index) => (
-                  <div key={music.id} className="main-music-player-list-item" onClick={() => this.handleToggle(index)}>
-                    <span className="main-music-player-list-item-name">{music.name}</span>
-                    <span className="main-music-player-list-item-singer">{music.singer}</span>
-                  </div>
-                ))
-              }
-            </div>
-          </div>
-        </div>
+        <MusicList onToggle={this.handleToggle} musics={musics} current={currentIndex} />
       </div >
     )
   }
