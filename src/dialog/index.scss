@@ -15,7 +15,7 @@
     opacity: 1;
   }
   100% {
-    top: 25%;
+    top: 32%;
     opacity: 0;
   }
 }
@@ -54,9 +54,9 @@
     padding: 10px 20px;
   }
   &.do-dialog-animate-in {
-    animation: dialog-animate-in ease-in .3s 1 forwards;
+    animation: dialog-animate-in ease .3s 1 forwards;
   }
   &.do-dialog-animate-out {
-    animation: dialog-animate-out ease-out .3s 1 forwards;
+    animation: dialog-animate-out ease .3s 1 forwards;
   }
 }

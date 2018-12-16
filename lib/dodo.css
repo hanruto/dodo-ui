@@ -250,7 +250,7 @@ button {
     top: 45%;
     opacity: 1; }
   100% {
-    top: 25%;
+    top: 32%;
     opacity: 0; } }
 .do-dialog {
   box-shadow: 1px -4px 30px -12px rgba(0, 0, 0, 0.7);
@@ -281,9 +281,9 @@ button {
     text-align: right;
     padding: 10px 20px; }
   .do-dialog.do-dialog-animate-in {
-    animation: dialog-animate-in ease-in .3s 1 forwards; }
+    animation: dialog-animate-in ease .3s 1 forwards; }
   .do-dialog.do-dialog-animate-out {
-    animation: dialog-animate-out ease-out .3s 1 forwards; }
+    animation: dialog-animate-out ease .3s 1 forwards; }
 
 .ze-tabs {
   overflow: hidden;
@@ -719,9 +719,9 @@ button {
   opacity: 0; }
 
 .animate-fade-in {
-  animation: animate-fade-in ease .2s 1 forwards; }
+  animation: animate-fade-in ease .3s 1 forwards; }
 
 .animate-fade-out {
-  animation: animate-fade-out ease .2s 1 forwards; }
+  animation: animate-fade-out ease .3s 1 forwards; }
 
 /*# sourceMappingURL=dodo.css.map */

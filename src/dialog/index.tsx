@@ -7,7 +7,7 @@ import { getDOMById } from '../utils/tool'
 
 
 const dialogRootId = 'do-dialog-root'
-const defaulAnimationDuration = 400
+const defaulAnimationDuration = 300
 
 interface Props {
   title?: string,
@@ -55,15 +55,12 @@ const create = option => {
 
   const close = () => {
     ReactDOM.render(<Dialog {...props} visible={false} onCancel={close} />, getDOMById(dialogRootId))
-
+    Mask.hidden()
     setTimeout(() => {
       ReactDOM.unmountComponentAtNode(getDOMById(dialogRootId))
-    }, defaulAnimationDuration + 30)
-
-    setTimeout(() => {
-      Mask.hidden()
-    }, defaulAnimationDuration - 300)
+    }, defaulAnimationDuration + 50)
   }
+
   const show = () => {
     return new Promise((resolve) => {
       Mask.show()
