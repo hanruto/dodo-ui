@@ -12,7 +12,7 @@ interface Props {
     from?: object;
     to?: object;
 }
-export declare class Animate extends React.Component<Props> {
+declare class Animate extends React.Component<Props> {
     render(): React.DetailedReactHTMLElement<{
         style: {
             transform: string;
@@ -20,6 +20,16 @@ export declare class Animate extends React.Component<Props> {
             opacity: number;
         };
     }, HTMLElement>[];
+}
+declare class AnimateQueueGroup extends React.Component<Props & QueueProps> {
+    state: {
+        current: number;
+    };
+    animate: boolean;
+    componentDidMount(): void;
+    componentWillReceiveProps(nextProps: any): void;
+    handleNextAnimate: () => void;
+    render(): JSX.Element[];
 }
 interface QueueProps {
     interval?: number;
@@ -32,20 +42,12 @@ export declare class AnimateQueue extends React.Component<QueueProps & Props> {
     state: {
         current: number;
     };
+    static Item: typeof Animate;
+    static Group: typeof AnimateQueueGroup;
     componentDidMount(): void;
     componentDidUpdate(prevProps: any): void;
     handleAnimate: (animate: any) => void;
     componentWillUnmount(): void;
-    render(): JSX.Element[];
-}
-export declare class AnimateQueueGroup extends React.Component<Props & QueueProps> {
-    state: {
-        current: number;
-    };
-    animate: boolean;
-    componentDidMount(): void;
-    componentWillReceiveProps(nextProps: any): void;
-    handleNextAnimate: () => void;
     render(): JSX.Element[];
 }
 export {};

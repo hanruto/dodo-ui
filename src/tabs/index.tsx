@@ -14,7 +14,7 @@ interface TabProps {
   changeBarToTab?: Function
 }
 
-export class Tab extends React.Component<TabProps> {
+class Tab extends React.Component<TabProps> {
   tab: any = React.createRef()
 
   ripple: any = React.createRef()
@@ -54,10 +54,12 @@ interface TabsProps {
   style?: any
   type?: string
 }
-export class Tabs extends React.Component<TabsProps> {
+export default class Tabs extends React.Component<TabsProps> {
   activeBar: any = React.createRef()
   activeTab: any = React.createRef()
 
+  static Item = Tab
+  
   componentDidUpdate() {
     this.handleChangeBar()
   }

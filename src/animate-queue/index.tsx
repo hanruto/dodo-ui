@@ -17,7 +17,7 @@ interface Props {
 
 const defaultSpeed = 600
 const defaultInterval = 200
-export class Animate extends React.Component<Props> {
+class Animate extends React.Component<Props> {
   render() {
     const { children, animate = true, speed = defaultSpeed, from, to } = this.props
     const additionAnimate = (animate ? to : from) || {}
@@ -37,6 +37,59 @@ export class Animate extends React.Component<Props> {
   }
 }
 
+
+
+class AnimateQueueGroup extends React.Component<Props & QueueProps> {
+  state = {
+    current: 0
+  }
+
+  animate = this.props.animate
+
+  componentDidMount() {
+    this.handleNextAnimate()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.animate !== this.props.animate) {
+      this.animate = nextProps.animate
+      this.handleNextAnimate()
+    }
+  }
+
+  handleNextAnimate = () => {
+    let { current } = this.state
+    const { children } = this.props
+    const max = children ? children.length : 0
+
+    if (this.animate && current >= max) {
+      current = max
+    } else if (!this.animate && current <= 0) {
+      current = 0
+    } else {
+      this.animate ? (current = current + 1) : (current = current - 1)
+    }
+    this.setState({ current })
+  }
+
+  render() {
+    const { children, speed = 400, animate, ...rest } = this.props
+    const { current } = this.state
+
+    return React.Children.map(children, (item: any, index: number) => {
+      return (
+        <div className="ze-animate-group-wrapper">
+          {React.cloneElement(item, {
+            animate: index < current,
+            ...rest,
+            onAnimateEnd: this.handleNextAnimate
+          })}
+        </div>
+      )
+    })
+  }
+}
+
 interface QueueProps {
   interval?: number
   children?: any
@@ -50,6 +103,9 @@ export class AnimateQueue extends React.Component<QueueProps & Props> {
   state = {
     current: 0
   }
+
+  static Item = Animate
+  static Group = AnimateQueueGroup
 
   componentDidMount() {
     setTimeout(() => this.handleAnimate(this.props.animate))
@@ -100,58 +156,6 @@ export class AnimateQueue extends React.Component<QueueProps & Props> {
     const { current } = this.state
     return React.Children.map(children, (item, index) => {
       return <Animate animate={index < current} speed={speed} {...rest}>{item}</Animate>
-    })
-  }
-}
-
-
-export class AnimateQueueGroup extends React.Component<Props & QueueProps> {
-  state = {
-    current: 0
-  }
-
-  animate = this.props.animate
-
-  componentDidMount() {
-    this.handleNextAnimate()
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.animate !== this.props.animate) {
-      this.animate = nextProps.animate
-      this.handleNextAnimate()
-    }
-  }
-
-  handleNextAnimate = () => {
-    let { current } = this.state
-    const { children } = this.props
-    const max = children ? children.length : 0
-
-    if (this.animate && current >= max) {
-      current = max
-    } else if (!this.animate && current <= 0) {
-      current = 0
-    } else {
-      this.animate ? (current = current + 1) : (current = current - 1)
-    }
-    this.setState({ current })
-  }
-
-  render() {
-    const { children, speed = 400, animate, ...rest } = this.props
-    const { current } = this.state
-
-    return React.Children.map(children, (item: any, index: number) => {
-      return (
-        <div className="ze-animate-group-wrapper">
-          {React.cloneElement(item, {
-            animate: index < current,
-            ...rest,
-            onAnimateEnd: this.handleNextAnimate
-          })}
-        </div>
-      )
     })
   }
 }

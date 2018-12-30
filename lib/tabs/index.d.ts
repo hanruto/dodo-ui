@@ -8,7 +8,7 @@ interface TabProps {
     style?: any;
     changeBarToTab?: Function;
 }
-export declare class Tab extends React.Component<TabProps> {
+declare class Tab extends React.Component<TabProps> {
     tab: any;
     ripple: any;
     createRipple: (e: any) => void;
@@ -26,9 +26,10 @@ interface TabsProps {
     style?: any;
     type?: string;
 }
-export declare class Tabs extends React.Component<TabsProps> {
+export default class Tabs extends React.Component<TabsProps> {
     activeBar: any;
     activeTab: any;
+    static Item: typeof Tab;
     componentDidUpdate(): void;
     handleClickTab: (_: any, value: any, index: any) => void;
     componentDidMount(): void;

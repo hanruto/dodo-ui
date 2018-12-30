@@ -1,6 +1,10 @@
 import React from 'react'
-import { Animate, AnimateQueue, AnimateQueueGroup } from '../../src/animate-queue'
+import { AnimateQueue } from '../../src/animate-queue'
 import Button from '../../src/button'
+
+
+const Animate = AnimateQueue.Item
+const AnimateQueueGroup = AnimateQueue.Group
 
 export default class Page extends React.Component {
   state = {
