@@ -16,6 +16,7 @@ interface Props {
   onOk?: any,
   animationIn?: string
   animationDuration?: number
+  noCancelBtn?: boolean
 }
 class Dialog extends React.Component<Props> {
   render() {
@@ -25,6 +26,7 @@ class Dialog extends React.Component<Props> {
       visible,
       onCancel,
       onOk,
+      noCancelBtn,
       animationDuration = defaulAnimationDuration
     } = this.props
 
@@ -41,7 +43,7 @@ class Dialog extends React.Component<Props> {
           {children}
         </div>
         <div className="do-dialog-footer">
-          <Button onClick={onCancel}>取消</Button>
+          {!noCancelBtn && <Button onClick={onCancel}>取消</Button>}
           <Button type="primary" onClick={onOk}>确定</Button>
         </div>
       </div>
@@ -52,10 +54,13 @@ class Dialog extends React.Component<Props> {
 const create = option => {
   const props = { ...option }
   props.children = option.content
-
+  
   const close = (option: any = {}) => {
     return new Promise((resolve) => {
-      ReactDOM.render(<Dialog {...props} visible={false} onCancel={close} />, getDOMById(dialogRootId))
+      ReactDOM.render(
+        <Dialog {...props} visible={false} />,
+        getDOMById(dialogRootId)
+      )
       !option.notCloseMask && Mask.hidden()
       setTimeout(() => {
         ReactDOM.unmountComponentAtNode(getDOMById(dialogRootId))
@@ -71,8 +76,8 @@ const create = option => {
         <Dialog
           {...props}
           visible={true}
-          onCancel={close}
-          onOk={() => resolve()}
+          onCancel={() => resolve()}
+          onOk={() => resolve(true)}
         />,
         getDOMById(dialogRootId)
       )

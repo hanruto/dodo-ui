@@ -15,10 +15,11 @@ export default class Page extends React.Component {
       })
   }
 
-  handleContinuouslyOpen = () => {
+  handleContinuouslyOpen = async () => {
     const dialog1 = Dialog.create({
-      title: '对话框一号',
-      content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos voluptate fugiat culpa nesciunt, quam commodi voluptatem accusantium hic? Explicabo consectetur nulla ullam aliquam. Numquam cumque voluptates ipsa reprehenderit, recusandae officiis.'
+      noCancelBtn: true,
+      title: '提示',
+      content: '是否要打开第二个对话框'
     })
 
     const dialog2 = Dialog.create({
@@ -26,10 +27,14 @@ export default class Page extends React.Component {
       content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos voluptate fugiat culpa nesciunt, quam commodi voluptatem accusantium hic? Explicabo consectetur nulla ullam aliquam. Numquam cumque voluptates ipsa reprehenderit, recusandae officiis.'
     })
 
-    dialog1.show()
-      .then(() => dialog1.close({ notCloseMask: true }))
-      .then(() => dialog2.show())
-      .then(() => dialog2.close())
+    const isOk = await dialog1.show()
+    if (isOk) {
+      await dialog1.close({ notCloseMask: true })
+      await dialog2.show()
+      dialog2.close()
+    } else {
+      dialog1.close()
+    }
   }
 
   render() {
