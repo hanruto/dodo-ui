@@ -7,6 +7,7 @@ interface TabProps {
     className?: string;
     style?: any;
     changeBarToTab?: Function;
+    type?: string;
 }
 declare class Tab extends React.Component<TabProps> {
     tab: any;

@@ -276,7 +276,8 @@ button {
       cursor: pointer; }
   .do-dialog-content {
     padding: 0 20px;
-    max-width: 450px; }
+    max-width: 450px;
+    margin-bottom: 10px; }
   .do-dialog-footer {
     text-align: right;
     padding: 10px 20px; }

@@ -12,11 +12,11 @@ interface TabProps {
   className?: string
   style?: any
   changeBarToTab?: Function
+  type?: string
 }
 
 class Tab extends React.Component<TabProps> {
   tab: any = React.createRef()
-
   ripple: any = React.createRef()
 
   createRipple = e => {
@@ -24,19 +24,18 @@ class Tab extends React.Component<TabProps> {
   }
 
   render() {
-    const { active, onClick, style, width } = this.props
+    const { active, onClick, style, width, type } = this.props
+
     return (
       <div
-        className={'ze-tab ze-clickable'
-          + (active ? (' ' + 'ze-active') : '')
-        }
-        onMouseDown={this.createRipple}
+        className={classnames('ze-tab', type !== 'easy' && 'ze-clickable', active && 'ze-active')}
+        onMouseDown={e => type !== 'easy' && this.createRipple(e)}
         onClick={onClick}
         style={Object.assign({}, style, { width })}
         ref={this.tab}
       >
         {this.props.children}
-        <Ripple ref={this.ripple} />
+        {type !== 'easy' && <Ripple ref={this.ripple} />}
       </div>
     )
   }
@@ -59,7 +58,7 @@ export default class Tabs extends React.Component<TabsProps> {
   activeTab: any = React.createRef()
 
   static Item = Tab
-  
+
   componentDidUpdate() {
     this.handleChangeBar()
   }
@@ -82,12 +81,11 @@ export default class Tabs extends React.Component<TabsProps> {
       this.activeBar.current.style.left = offsetLeft + 'px'
     }
   }
+
   render() {
-    const { children, value = 0, type } = this.props
+    const { children, value, type } = this.props
     return (
-      <div
-        className={classnames("ze-tabs", type && "ze-tabs-" + type)}
-      >
+      <div className={classnames("ze-tabs", type && "ze-tabs-" + type)}>
         {
           children &&
           React.Children.map(children,
@@ -96,10 +94,14 @@ export default class Tabs extends React.Component<TabsProps> {
               const active = tabValue === value
 
               return React.cloneElement(child, {
-                onClick: e => this.handleClickTab(e, tabValue, index),
+                onClick: e => {
+                  this.handleClickTab(e, tabValue, index)
+                  child.props.onClick && child.props.onClick(e)
+                },
                 active: active,
                 ref: active ? this.activeTab : null,
-                value: tabValue
+                value: tabValue,
+                type
               })
             }
           )
