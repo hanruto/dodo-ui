@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as ReactIs from 'react-is'
 import { findDOMNode } from 'react-dom'
 import Ripple from '../ripple'
 import classnames from 'classnames'
@@ -79,18 +80,26 @@ export default class Tabs extends React.Component<TabsProps> {
       const { offsetWidth, offsetLeft } = el
       this.activeBar.current.style.width = offsetWidth + 'px'
       this.activeBar.current.style.left = offsetLeft + 'px'
+    } else {
+      this.activeBar.current.style.width = 0 + 'px'
     }
   }
 
   render() {
-    const { children, value, type } = this.props
+    const { value, type } = this.props
+    let children: any = this.props.children
+    if (ReactIs.isFragment(children)) {
+      children = children.props.children
+    }
+
     return (
       <div className={classnames("ze-tabs", type && "ze-tabs-" + type)}>
         {
           children &&
           React.Children.map(children,
             (child: any, index) => {
-              const tabValue = child.props.value || index
+              const valueIsValid = child.props.value || typeof child.props.value === 'number'
+              const tabValue = valueIsValid ?child.props.value : index
               const active = tabValue === value
 
               return React.cloneElement(child, {

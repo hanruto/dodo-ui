@@ -3,44 +3,38 @@ import { Tabs } from '../../src'
 
 export default class Page extends React.Component {
   state = {
-    value: 0
+    value: 0,
+    other: false
   }
 
   handleChange = value => {
     this.setState({ value })
   }
 
+  toggleTab = () => {
+    this.setState({ other: !this.state.other})
+  }
+
   render() {
-    const { value } = this.state
+    const { value, other } = this.state
 
     return (
       <>
-        <h2>普通选项卡</h2>
-        <Tabs value={value} onChange={this.handleChange}>
-          <Tabs.Item>菜单一</Tabs.Item>
-          <Tabs.Item>菜单二</Tabs.Item>
-          <Tabs.Item>菜单三</Tabs.Item>
-          <Tabs.Item>我是一个长长的菜单</Tabs.Item>
-        </Tabs>
-
-        <h2>简约风格</h2>
-        <Tabs type="easy" value={value} onChange={this.handleChange}>
-          <Tabs.Item>菜单一</Tabs.Item>
-          <Tabs.Item>菜单二</Tabs.Item>
-          <Tabs.Item>菜单三</Tabs.Item>
-          <Tabs.Item>我是一个长长的菜单</Tabs.Item>
-        </Tabs>
-
         <h2>没有value</h2>
-        <Tabs type="easy" value={-5}>
-          <Tabs.Item>菜单一</Tabs.Item>
-          <Tabs.Item onClick={() => this.handleChange(2)}>菜单二</Tabs.Item>
-          <Tabs.Item>菜单三</Tabs.Item>
-          <Tabs.Item>我是一个长长的菜单</Tabs.Item>
-        </Tabs>
-
-        <Tabs>
-          {}
+        <Tabs type="easy" value={value}>
+          {
+            other
+              ? <>
+                <Tabs.Item value={2}>我是一个长长的菜单</Tabs.Item>
+                <Tabs.Item value={0} onClick={() => this.toggleTab()}>我是一个长长的菜单</Tabs.Item>
+                <Tabs.Item value={3}>我是一个长长的菜单</Tabs.Item>
+              </>
+              : <>
+                <Tabs.Item value={0}>菜单一</Tabs.Item>
+                <Tabs.Item value={3} onClick={() => this.toggleTab()}>菜单二</Tabs.Item>
+                <Tabs.Item value={1}>菜单三</Tabs.Item>
+              </>
+          }
         </Tabs>
       </>
     )
